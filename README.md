@@ -329,7 +329,7 @@ finally:
 
 <img width="1260" height="2652" alt="image" src="https://github.com/user-attachments/assets/a1537319-b93b-4952-a28d-4bf0870293c2" />
 
-### FIGURE -11 Blynk App Screenshot for IR Sensor
+
 
 
 
