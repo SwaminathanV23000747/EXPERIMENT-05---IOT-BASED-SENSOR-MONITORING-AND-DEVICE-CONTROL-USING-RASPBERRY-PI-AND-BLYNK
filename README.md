@@ -2,10 +2,10 @@
 
 ---
 
-### **NAME:**  
-### **DEPARTMENT:**  
-### **ROLL NO:**  
-### **DATE OF EXPERIMENT:**  
+### **NAME: Swaminathan.V**  
+### **DEPARTMENT:CSE-IOT**  
+### **ROLL NO:212223110057**  
+### **DATE OF EXPERIMENT:20/05/2026**  
 
 ---
 
@@ -222,28 +222,115 @@ while True:
 2.	Screenshot of device control buttons.
 3.	Photo of hardware setup with Raspberry Pi and sensors.
 
+### Program Code: 
+```
+import RPi.GPIO as GPIO
+import BlynkLib
+import time
 
-### FIGURE -08 Relay On Image
+# Blynk Authentication Token
+BLYNK_AUTH = "eU6OL05YDJVL05ruQZxjjEvNswdC-nM6"
 
-### FIGURE -09 LED On Image
+# GPIO Pin Definitions
+IR_PIN = 23
+LDR_PIN = 24
+RELAY = 18
+LED = 25
+BUZZER = 17
 
-### FIGURE -10 Buzzer On Image
+# ---------------- GPIO SETUP ----------------
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(IR_PIN, GPIO.IN)
+GPIO.setup(LDR_PIN, GPIO.IN)
+
+GPIO.setup(RELAY, GPIO.OUT)
+GPIO.setup(LED, GPIO.OUT)
+GPIO.setup(BUZZER, GPIO.OUT)
+
+GPIO.output(RELAY, GPIO.LOW)
+GPIO.output(LED, GPIO.LOW)
+GPIO.output(BUZZER, GPIO.LOW)
+
+# ---------------- BLYNK CONNECTION ----------------
+while True:
+    try:
+        print("Connecting to Blynk...")
+        blynk = BlynkLib.Blynk(
+            BLYNK_AUTH,
+            server="blynk.cloud",
+            port=80
+        )
+        print("Connected to Blynk")
+        break
+    except Exception as e:
+        print("Blynk connection failed:", e)
+        print("Retrying in 5 seconds...")
+        time.sleep(5)
+
+# ---------------- BLYNK HANDLERS ----------------
+def relay_control(value):
+    GPIO.output(RELAY, int(value[0]))
+
+def led_control(value):
+    GPIO.output(LED, int(value[0]))
+
+def buzzer_control(value):
+    GPIO.output(BUZZER, int(value[0]))
+
+# Register handlers (older BlynkLib version syntax)
+blynk.on("V2", relay_control)
+blynk.on("V3", led_control)
+blynk.on("V4", buzzer_control)
+
+# ---------------- MAIN LOOP ----------------
+try:
+    while True:
+        blynk.run()
+
+        # Read sensors
+        ir_value = GPIO.input(IR_PIN)
+        ldr_value = GPIO.input(LDR_PIN)
+
+        # Print to terminal
+        print("IR:", ir_value, "LDR:", ldr_value)
+
+        # Send sensor data to Blynk
+        blynk.virtual_write(0, ir_value)
+        blynk.virtual_write(1, ldr_value)
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    print("Program stopped by user")
+
+finally:
+    # Turn OFF outputs
+    GPIO.output(RELAY, GPIO.LOW)
+    GPIO.output(LED, GPIO.LOW)
+    GPIO.output(BUZZER, GPIO.LOW)
+
+    GPIO.cleanup()
+    print("GPIO cleaned up")
+```
+
+
+### FIGURE -08 Kit Image
+<img width="1600" height="1200" alt="WhatsApp Image 2026-05-20 at 6 44 43 PM" src="https://github.com/user-attachments/assets/044006fc-126e-4588-abf9-d617b211ecc7" />
+
+
+### FIGURE -09 Console output
+<img width="1840" height="1020" alt="image" src="https://github.com/user-attachments/assets/52f18f60-af03-45e8-bc68-53d947a50aca" />
+
+
+### FIGURE -10 Blynk
+<img width="1260" height="2652" alt="image" src="https://github.com/user-attachments/assets/b031ef22-d626-4c8f-9333-d2219181f9c1" />
+
+<img width="1260" height="2652" alt="image" src="https://github.com/user-attachments/assets/a1537319-b93b-4952-a28d-4bf0870293c2" />
 
 ### FIGURE -11 Blynk App Screenshot for IR Sensor
 
-### FIGURE -12 Blynk App Screenshot for LDR Sensor
-
-### FIGURE -13 Blynk App Screenshot for Relay ON
-
-### FIGURE -11 Blynk App Screenshot for Relay OFF
-
-### FIGURE -12 Blynk App Screenshot for Buzzer ON
-
-### FIGURE -13 Blynk App Screenshot for Buzzer OFF
-
-### FIGURE -14 Blynk App Screenshot for LED ON
-
-### FIGURE -15 Blynk App Screenshot for LED OFF
 
 
 
